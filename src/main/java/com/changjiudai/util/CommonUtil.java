@@ -26,15 +26,17 @@ public class CommonUtil {
 		
 		//验证码错误
 		//用户名密码错误
-		if(responseStr.indexOf("验证码错误") != -1){
+		if(responseStr.indexOf("icon_ture") != -1){
+			logger.info("login successfully!");
+			return true;
+		}else if(responseStr.indexOf("icon_worrg") != -1){
 			logger.info("fail login with wrong img code!");
 			return false;
-		}else if(responseStr.indexOf("用户名密码错误") != -1){
+		}else{
 			logger.info("fail login with wrong username or password!");
 			return false;
 		}
-		logger.info("login successfully!");
-		return true;
+		
 	}
 	
 	public static String getProjectPath() {
