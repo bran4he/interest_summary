@@ -89,7 +89,7 @@
 	</dependencies>
 
 	<build>
-
+	<finalName>interest-summary</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -98,17 +98,6 @@
 				<configuration>
 					<source>1.8</source>
 					<target>1.8</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat7-maven-plugin</artifactId>
-				<version>2.0</version>
-				<configuration>
-					<port>8080</port>
-					<uriEncoding>UTF-8</uriEncoding>
-					<path>/</path>
-					<!-- optional if you want to add some extra directories into the classloader -->
 				</configuration>
 			</plugin>
 		</plugins>
