@@ -9,3 +9,13 @@ a demo to show interest capturing data from website and show charts with echarts
 5. add permission control
 6. for config. file, save something security data use complicate method, eg. BASE64 and then exchange some character
 7. TBC
+
+
+- - -
+update currently
+
+## 主页
+![Alt text](index_page.png)
+
+## 弹出窗口显示统计报表
+![Alt text](echarts_page.png)
