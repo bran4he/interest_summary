@@ -349,8 +349,11 @@ public class LoginService {
 	}
 	
 	//￥1233.33 -> 1233.33(double)
-	private static Long parseStringToDouble(String str){
-		Format f=new DecimalFormat("￥#.##");
+	private static Long parseStringToDouble(String strWithFlag){
+		
+		String str = strWithFlag.substring(1);
+		
+		Format f=new DecimalFormat("#.##");
 		Long result =0L;
 		try {
 			Object d = f.parseObject(str);

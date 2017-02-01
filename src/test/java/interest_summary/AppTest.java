@@ -19,7 +19,14 @@ public class AppTest {
 //		getNumTest2("￥0.00");
 //		getNumTest2("￥2.00");
 //		sortListTest();
-		getPageNumTest();
+//		getPageNumTest();
+
+		stringTest();
+	}
+	
+	public static void stringTest(){
+		String str = "￥1233.33";
+		System.out.println(str.substring(1));
 	}
 	
 	public static void getPageNumTest(){
