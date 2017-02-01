@@ -18,7 +18,23 @@ public class AppTest {
 //		getNumTest2("￥1.01");
 //		getNumTest2("￥0.00");
 //		getNumTest2("￥2.00");
-		sortListTest();
+//		sortListTest();
+		getPageNumTest();
+	}
+	
+	public static void getPageNumTest(){
+		String str = "共12页/当前为第1页 首页 上一页 下一页 尾页";
+		String regex = "\\d{1,2}";
+		
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(str);
+		
+		if(m.find()){
+			System.out.println(m.group(0));
+		}
+//		while(m.find()){
+//			System.out.println(m.group());
+//		}
 	}
 
 	public static void sortListTest(){
@@ -73,7 +89,6 @@ public class AppTest {
 		String regex = "\\d{1,2}";
 		Pattern p = Pattern.compile(regex);
 		Matcher m = p.matcher(data);
-		int n =0;
 		while(m.find()){
 			System.out.println(m.group());
 		}

@@ -246,7 +246,7 @@ public class LoginService {
 			doc = Jsoup.connect(Cconstant.PAGE_NUM_URL).cookies(cookies).timeout(30000).get();
 			Elements pages = doc.select("div .userPage");
 			String pageStr = pages.get(0).text();	//共12页/当前为第1页 首页 上一页 下一页 尾页
-			int totalPages = Integer.parseInt(pageStr.substring(1, pageStr.indexOf("页")));
+			int totalPages = Integer.parseInt(getPageNum(pageStr));
 			logger.info("==========get total pages :" + totalPages);
 			cagent.setTotalPages(totalPages);
 		}
@@ -369,5 +369,19 @@ public class LoginService {
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	private String getPageNum(String str){
+		String regex = "\\d{1,2}";
+		
+		Pattern p = Pattern.compile(regex);
+		Matcher m = p.matcher(str);
+		
+		if(m.find()){
+			return m.group(0);
+		}else{
+			logger.info("cannot find page num, please check!!");
+			return "0";
+		}
 	}
 }
