@@ -3,28 +3,20 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; UTF-8">
-	
 	<link rel="shortcut icon" href="../favicon.ico">
 	<link rel="icon" href="../favicon.ico">
 
 	<script src="//cdn.bootcss.com/jquery/1.10.0/jquery.js"></script>
 	
-	<!-- 引入 ECharts 文件 
-	<script src="../js/echarts.js"></script>
-	-->
+	<!-- 引入 ECharts 文件 -->
 	<script src="//cdn.bootcss.com/echarts/3.4.0/echarts.js"></script>
-	
-	<!-- 引入 shine 主题
-	<script src="../js/shine.js"></script>
-	 -->
+	<!-- 引入 shine 主题 -->
 	<script src="//cdn.bootcss.com/shine.js/0.2.7/shine.js"></script>
-	
 	
 	<link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 	<script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	
 	<style type="text/css">
-  
 		.box{  
 				margin-left:auto;  
 				margin-right:auto; 
@@ -159,53 +151,40 @@
 </head>
 <body>
 <div class="container">
-<div class="page-header">
-    <h1>长久贷P2P投资管理工具
-        <small>登录, 签到, 报表导出及展示</small>
-    </h1>
-</div>
-<!-- 
-<p>基于Spring MVC的应用, 后台提供Restful API, 前端基于jquery + bootstrap。</p>
- -->
- <!-- 
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <h3 class="panel-title">长久贷P2P投资管理工具</h3>
-    </div>
-    <div class="panel-body">
-  -->
-		<form class="form-horizontal" role="form">
+	<div class="page-header">
+	    <h1>长久贷P2P投资管理工具
+	        <small>登录, 签到, 报表导出及展示</small>
+	    </h1>
+	</div>
+	<form class="form-horizontal" role="form">
+	
+		<div class="form-group">
+			<label for="username" class="col-sm-2 control-label">用户名:</label>
+			<div class="col-xs-4">
+				<input type="text" class="form-control" id="username" placeholder="请输入用户名">
+			</div>
+		</div>
 		
-			<div class="form-group">
-				<label for="username" class="col-sm-2 control-label">用户名:</label>
-				<div class="col-xs-4">
-					<input type="text" class="form-control" id="username" placeholder="请输入用户名">
-				</div>
+		<div class="form-group">
+			<label for="password" class="col-sm-2 control-label">密码:</label>
+			<div class="col-xs-4">
+				<input type="password" class="form-control" id="password" placeholder="请输入密码">
 			</div>
-			
-			<div class="form-group">
-				<label for="password" class="col-sm-2 control-label">密码:</label>
-				<div class="col-xs-4">
-					<input type="password" class="form-control" id="password" placeholder="请输入密码">
-				</div>
+		</div>
+		
+		<div class="form-group">
+			<label for="imgCode" class="col-sm-2 control-label">验证码:</label>
+			<div class="col-xs-4">
+				<input type="text" class="form-control" id="imgCode" placeholder="请输入验证码" />
+				<br>
+				<img alt="这是验证码啊！！" id="imgUrl" src=""> 
+				<input type="button" value="获取验证码" id="getImgCode" class="btn btn-info" />
 			</div>
-			
-			<div class="form-group">
-				<label for="imgCode" class="col-sm-2 control-label">验证码:</label>
-				<div class="col-xs-4">
-					<input type="text" class="form-control" id="imgCode" placeholder="请输入验证码" />
-					<br>
-					<img alt="这是验证码啊！！" id="imgUrl" src=""> 
-					<input type="button" value="获取验证码" id="getImgCode" class="btn btn-info" />
-				</div>
-			</div>
-			
-		</form>
+		</div>
+	</form>
 	
 	<input type="button"  value="登录"  id="login" class="btn btn-primary"/>
 	<input type="button"  value="签到"  id="sign" class="btn btn-primary"/>
-	
-	
 	
 	<input type="button"  value="导出报表"  id="export"  class="btn btn-primary"/>
 	<input type="button" value="展示报表" data-toggle="modal" data-target="#myModal"
@@ -215,14 +194,6 @@
 	
 
 
-<!-- 
-    </div>
-    <div class="panel-footer">
-    	登录, 签到, 报表导出及展示
-     <p><a href="https://github.com/bran4he/interest_summary">项目github</a></p>
-     </div>
-</div>
- -->
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
