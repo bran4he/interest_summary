@@ -3,6 +3,10 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; UTF-8">
+	
+	<link rel="shortcut icon" href="../favicon.ico">
+	<link rel="icon" href="../favicon.ico">
+
 	<script src="//cdn.bootcss.com/jquery/1.10.0/jquery.js"></script>
 	
 	<!-- 引入 ECharts 文件 

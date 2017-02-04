@@ -29,6 +29,7 @@
     <mvc:resources location="/" mapping="**.png"/>  
     <mvc:resources location="/" mapping="**.gif"/>  
     <mvc:resources location="/" mapping="**.jpg"/>
+    <mvc:resources location="/" mapping="**.ico"/>
     
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
       <property name="prefix" value="/WEB-INF/jsp/" />
