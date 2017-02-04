@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Component
-//@Scope("session")
 public class Cagent {
 
 	private static Logger logger = Logger.getLogger(Cagent.class);
