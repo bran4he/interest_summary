@@ -27,7 +27,6 @@ import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -37,6 +36,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.changjiudai.bean.Cagent;
@@ -47,7 +48,7 @@ import com.changjiudai.util.CommonUtil;
 @Service
 public class SumService {
 
-	private static Logger logger = Logger.getLogger(SumService.class);
+	private static final Logger logger = LoggerFactory.getLogger(SumService.class);
 	
 	public void sign(Cagent cagent){
 		
@@ -63,7 +64,7 @@ public class SumService {
 						.setUri(new URI("http://www.changjiudai.com/index.php?user&q=code/credit/registertime"))
 						.build();
 				response = httpclient.execute(sign);
-				logger.info("sign get status: " + response.getStatusLine());
+				logger.info("sign get status: {}", response.getStatusLine());
 				HttpEntity entity1 = response.getEntity();
 				
 //				CommonUtil.logHeaders(response1.getAllHeaders());
@@ -76,7 +77,7 @@ public class SumService {
 					sbSign.append(new String(buffSign, 0, lenSign));
 				}
 				
-				logger.info("sign response: \t" + sbSign.toString());//[5,6,7,8,9,11,16,25,26,27,28,29,30,]
+				logger.info("sign response: {}", sbSign.toString());//[5,6,7,8,9,11,16,25,26,27,28,29,30,]
 				
 				cagent.setSignedList(separateSignedDays(sbSign.toString()));
 				
@@ -111,7 +112,7 @@ public class SumService {
 		List<Cookie> cookielst = cagent.getCookieStore().getCookies();
 		
 		for (int i = 0; i < cookielst.size(); i++) {
-			logger.info("- " + cookielst.get(i).getName() + "\t" + cookielst.get(i).getValue());	//cookies.get(i).toString()
+			logger.info("-{}\t{}", cookielst.get(i).getName(), cookielst.get(i).getValue());	//cookies.get(i).toString()
 			cookies.put(cookielst.get(i).getName(), cookielst.get(i).getValue());
 		}
 		
@@ -122,7 +123,7 @@ public class SumService {
 			Elements pages = doc.select("div .userPage");
 			String pageStr = pages.get(0).text();	//共12页/当前为第1页 首页 上一页 下一页 尾页
 			int totalPages = Integer.parseInt(getPageNum(pageStr));
-			logger.info("==========get total pages :" + totalPages);
+			logger.info("==========get total pages :{}", totalPages);
 			cagent.setTotalPages(totalPages);
 		}
 		
@@ -132,14 +133,14 @@ public class SumService {
 			doc = Jsoup.connect(url).cookies(cookies).timeout(30000).get();
 			
 			Elements tables = doc.select(".tableInfo");
-			
+			logger.info("{}\t{}\t{}\t{}", "date", "total", "capital", "interest");
 			//2017-04-26	￥1233.33	￥0.00	￥1233.33
 			for(Element table : tables){
 				String date = table.select("td").get(1).attr("title"); //date 日期
 				String total = table.select("td").get(4).text();	//total 共收入
 				String capital = table.select("td").get(5).text();	//capital 本金
 				String interest = table.select("td").get(6).text();	//interest 利息
-				logger.info(date +"\t"+ total +"\t"+ capital + "\t" +interest);
+				logger.info("{}\t{}\t{}\t{}", date, total, capital, interest);
 				datelst.add(date);
 				totallst.add(parseStringToDouble(total));
 				capitallst.add(parseStringToDouble(capital));
@@ -238,12 +239,12 @@ public class SumService {
 				Double tmp = (Double) d;
 				result = tmp.longValue();
 			}else{
-				logger.info(str +"cannot be cast to Long or Double!!");
+				logger.info("{} cannot be cast to Long or Double!!", str);
 			}
 			
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
-			logger.debug("==========the parsed data is :" + str);
+			logger.debug("==========the parsed data is :{}", str);
 			e.printStackTrace();
 		}
 		return result;

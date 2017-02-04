@@ -1,23 +1,12 @@
 package com.changjiudai.service;
 
 import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.text.DecimalFormat;
-import java.text.Format;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -31,27 +20,17 @@ import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
-import org.apache.log4j.Logger;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.changjiudai.bean.Cagent;
-import com.changjiudai.bean.ReportData;
-import com.changjiudai.util.Cconstant;
 import com.changjiudai.util.CommonUtil;
 
 @Service
 public class LoginService {
 
-	private static final Logger logger = Logger.getLogger(LoginService.class);
+	private static final Logger logger = LoggerFactory.getLogger(LoginService.class);
 	
 	public void setImagePath(Cagent cagent){
 		BasicCookieStore cookieStore = new BasicCookieStore();
@@ -83,16 +62,16 @@ public class LoginService {
 				fileOut.close();
 				bis.close();
 				
-				logger.info("get img code status: " + response.getStatusLine());
+				logger.info("get img code status: {}", response.getStatusLine());
 				EntityUtils.consume(entity);
 
-				logger.info("Initial set of cookies:");
+				logger.info("initial set of cookies:");
 				List<Cookie> cookies = cagent.getCookieStore().getCookies();
 				if (cookies.isEmpty()) {
 					logger.info("None");
 				} else {
 					for (int i = 0; i < cookies.size(); i++) {
-						logger.info("- " + cookies.get(i).getName() + "\t" + cookies.get(i).getValue());
+						logger.info("-{}\t{}", cookies.get(i).getName(), cookies.get(i).getValue());
 					}
 				}
 			} finally {
@@ -141,7 +120,7 @@ public class LoginService {
 			
 			CommonUtil.logHeaders(response.getAllHeaders());
 			
-			logger.info("login get status: " + response.getStatusLine());
+			logger.info("login get status: {}", response.getStatusLine());
 			EntityUtils.consume(entity);
 			
 			logger.info("Post login cookies:");
@@ -151,7 +130,7 @@ public class LoginService {
 				logger.info("None");
 			} else {
 				for (int i = 0; i < cookies.size(); i++) {
-					logger.info("- " + cookies.get(i).getName() + "\t" + cookies.get(i).getValue());	//cookies.get(i).toString()
+					logger.info("-{}\t{}", cookies.get(i).getName(), cookies.get(i).getValue());	//cookies.get(i).toString()
 				}
 			}
 			

@@ -1,28 +1,27 @@
 package com.changjiudai.util;
 
 import org.apache.http.Header;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 //import com.changjiudai.trans.LoginAction;
 //import com.changjiudai.trans.TransUtil;
 
 public class CommonUtil {
 
-	private static Logger logger = Logger.getLogger(CommonUtil.class);
-	
-
+	private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 	
 	
 	public static void logHeaders(Header[] headers) {
 		logger.info("----response headers----");
 		for (Header header : headers) {
-			logger.info(header.getName() + "\t" + header.getValue());
+			logger.info("{}\t{}",header.getName(), header.getValue());
 		}
 		logger.info("----response headers----");
 	}
 	
 	public static boolean checkLogin(String responseStr) {
-		logger.info("login response: \n" + responseStr);
+		logger.info("login response: \n {}", responseStr);
 		
 		//验证码错误
 		//用户名密码错误

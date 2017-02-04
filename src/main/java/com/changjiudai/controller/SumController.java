@@ -10,7 +10,8 @@ import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,14 +26,14 @@ import com.changjiudai.service.SumService;
 @RequestMapping("/sum")
 public class SumController {
 	
-	private static Logger logger = Logger.getLogger(SumController.class);
+	private static final Logger logger = LoggerFactory.getLogger(SumController.class);
 	
 	@Autowired
 	private SumService sumService;
 
 	@RequestMapping(value="sign", method=RequestMethod.GET)
 	public @ResponseBody Cagent sign(HttpSession session){
-		
+		logger.info("request sign");
 		Cagent cagent = (Cagent) session.getAttribute("cagent");
 		sumService.sign(cagent);
 		return cagent;
@@ -40,7 +41,7 @@ public class SumController {
 	
 	@RequestMapping(value="export", method=RequestMethod.GET)
 	public @ResponseBody Cagent export(HttpSession session) throws IOException{
-		
+		logger.info("request export");
 		Cagent cagent = (Cagent) session.getAttribute("cagent");
 		sumService.exportReport(cagent, sumService.prepareReport(cagent));
 		return cagent;
@@ -55,7 +56,7 @@ public class SumController {
 	
 	@RequestMapping(value="login", method=RequestMethod.GET)
 	public @ResponseBody ReportData exportChartData(HttpSession session) throws IOException{
-		
+		logger.info("request login");
 		Cagent cagent = (Cagent) session.getAttribute("cagent");
 		
 		ReportData reportData = sumService.prepareReport(cagent);

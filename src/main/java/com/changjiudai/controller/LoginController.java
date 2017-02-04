@@ -2,7 +2,8 @@ package com.changjiudai.controller;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,7 @@ import com.changjiudai.service.LoginService;
 @RequestMapping("/login")
 public class LoginController {
 
-	private static Logger logger = Logger.getLogger(LoginController.class);
+	private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	
 	@Autowired
 	private LoginService loginService;
@@ -45,9 +46,9 @@ public class LoginController {
 			@RequestParam("password")String passWord,
 			@RequestParam("imgcode")String code){
 		
-		logger.info("============username:" + userName);
-		logger.info("============password:" + passWord);
-		logger.info("============imgcode:" + code);
+		logger.info("============username: {}", userName);
+		logger.info("============password:{}", passWord);
+		logger.info("============imgcode:{}", code);
 		Cagent cagent = (Cagent) session.getAttribute("cagent");
 		cagent.setUserName(userName);
 		cagent.setPassWord(passWord);
