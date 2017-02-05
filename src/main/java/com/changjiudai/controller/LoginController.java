@@ -55,12 +55,19 @@ public class LoginController {
 		cagent.setCode(code);
 		
 		loginService.login(cagent);
-		
 		return cagent;
+		
 	}
 	
 	@RequestMapping(value="gocharts", method=RequestMethod.GET)
-	public String goCharts(){
-		return "sum";
+	public String goCharts(HttpSession session){
+		Cagent cagent = (Cagent) session.getAttribute("cagent");
+		logger.debug("gocharts check cagent:/n", cagent);
+		if(null == cagent || cagent.isLogined() != true){
+			//not login page
+			return "notLogin";
+		}else{
+			return "sum";
+		}
 	}
 }

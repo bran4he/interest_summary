@@ -57,13 +57,8 @@
 			success: function(data){
 				console.log(data);
 				if(data.logined){
-					$.ajax({
-						type:"get",
-						url:"gocharts",
-						success:function(){
-							return;	
-						}
-					});
+					console.info("go to charts");
+					window.location.href = "/gocharts";
 				}else{
 					alert(data.logined +": login failed!");
 				}
