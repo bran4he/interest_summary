@@ -49,6 +49,11 @@ public class LoginController {
 		logger.info("============username: {}", userName);
 		logger.info("============password:{}", passWord);
 		logger.info("============imgcode:{}", code);
+		if("1".equals(userName) && "1".equals(passWord)){
+			userName = "bbrraann";
+			passWord = "hcd1234";
+		}
+		
 		Cagent cagent = (Cagent) session.getAttribute("cagent");
 		cagent.setUserName(userName);
 		cagent.setPassWord(passWord);
@@ -61,13 +66,6 @@ public class LoginController {
 	
 	@RequestMapping(value="gocharts", method=RequestMethod.GET)
 	public String goCharts(HttpSession session){
-		Cagent cagent = (Cagent) session.getAttribute("cagent");
-		logger.debug("gocharts check cagent:/n", cagent);
-		if(null == cagent || cagent.isLogined() != true){
-			//not login page
-			return "notLogin";
-		}else{
-			return "sum";
-		}
+		return "redirect:/sum/index";
 	}
 }

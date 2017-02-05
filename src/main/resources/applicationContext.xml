@@ -24,12 +24,13 @@
     
      <!-- 静态资源解析包括 ：js、css、img、 -->  
     <mvc:resources location="/" mapping="**.html"/>  
-    <mvc:resources location="/" mapping="**.js"/>  
     <mvc:resources location="/" mapping="**.css"/>  
     <mvc:resources location="/" mapping="**.png"/>  
     <mvc:resources location="/" mapping="**.gif"/>  
     <mvc:resources location="/" mapping="**.jpg"/>
     <mvc:resources location="/" mapping="**.ico"/>
+    
+    <mvc:resources location="/WEB-INF/static/" mapping="/static/**" />
     
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
       <property name="prefix" value="/WEB-INF/jsp/" />

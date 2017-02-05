@@ -31,6 +31,19 @@ public class SumController {
 	@Autowired
 	private SumService sumService;
 
+	@RequestMapping(value="index", method=RequestMethod.GET)
+	public String chartsPage(HttpSession session){
+		Cagent cagent = (Cagent) session.getAttribute("cagent");
+		logger.debug("sum index page, cagent:/n", cagent);
+		if(null == cagent || cagent.isLogined() != true){
+			//not login page
+			return "notLogin";
+		}else{
+			return "sum";
+		}
+		
+	}
+	
 	@RequestMapping(value="sign", method=RequestMethod.GET)
 	public @ResponseBody Cagent sign(HttpSession session){
 		logger.info("request sign");
@@ -54,7 +67,7 @@ public class SumController {
 		List<Long> interestlst = new ArrayList<Long>();
 	*/
 	
-	@RequestMapping(value="login", method=RequestMethod.GET)
+	@RequestMapping(value="chart", method=RequestMethod.GET)
 	public @ResponseBody ReportData exportChartData(HttpSession session) throws IOException{
 		logger.info("request login");
 		Cagent cagent = (Cagent) session.getAttribute("cagent");

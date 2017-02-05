@@ -27,7 +27,7 @@
 	        <small>登录失败, 未授权访问！</small>
 	    </h1>
 	</div>
-	<form action="index" method="get">
+	<form action="../login/index" method="get">
 		<input type="submit" value="返回登录" class="btn btn-warning"/>
 	</form>
 	

@@ -16,105 +16,7 @@
 	<link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 	<script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	
-	<style type="text/css">
-		.box{  
-				margin-left:auto;  
-				margin-right:auto; 
-				margin-top:100PX; 
-			}
-	</style>
-	
-	<script type="text/javascript">
-	 $(document).ready(function(){
-		 $("#sign").on('click', sign);
-		 $("#export").on('click', exportXlsx);
-		 $("#viewCharts").on('click', showCharts);
-	 });
-	
-	function sign(){
-		$.ajax({
-			type:"get",
-			dataType:"json",
-			url:"sign",
-			success: function(data){
-				console.log(data);
-				alert(data.signedList);
-			}
-		});
-	}
-	
-	function exportXlsx() {
-		
-		$.ajax({
-			type:"get",
-			dataType:"json",
-			url:"export",
-			success: function(data){
-				console.log(data);
-				$("#report").attr("href","..//"+data.reportPath);
-			}
-		});
-	}
-	
-	
-	function showCharts() {
-		
-		$.ajax({
-			type:"get",
-			dataType:"json",
-			url:"chart",
-			success: function(data){
-				console.log(data);
-				viewCharts(data);
-			}
-		});
-	}
-	
-	function viewCharts(data){
-		// 基于准备好的dom，初始化echarts实例
-		var myChart = echarts.init(document.getElementById('main'),'shine');
-		
-		// 指定图表的配置项和数据
-		var option = {
-			title : {
-				text : '回款计划详细'
-			},
-			tooltip : {},
-			legend : {
-				data : [ '本息', '本金', '利息' ]
-			},
-			xAxis : {
-				data : data.datelst
-			},
-			yAxis : {},
-			series : [ 
-			{
-				name : '本息',
-				type : 'bar',
-				data : data.totallst
-			},
-			{
-				name : '本金',
-				type : 'bar',
-				data : data.capitallst
-			},
-			{
-				name : '利息',
-				type : 'bar',
-				data : data.interestlst
-			}
-			]
-		};
-
-		// 使用刚指定的配置项和数据显示图表。
-		myChart.setOption(option);
-	}
-	
-	window.onload = function () {
-		console.log("load...");
-	}
-	
-	</script>
+	<script type="text/javascript" src="../static/js/sum.js"></script>
 
 </head>
 <body>
@@ -124,19 +26,26 @@
 	        <small>登录, 签到, 报表导出及展示</small>
 	    </h1>
 	</div>
-	
-	<input type="button"  value="签到"  id="sign" class="btn btn-primary"/>
+	<form class="form-inline" role="form">
+		<div class="checkbox">
+		    <label>
+		      <input type="checkbox" id="keepSign" name="keepSign">后台签到
+		      <span id="tip" class="badge pull-right">?</span>
+		    </label>
+	 	</div>
+		<input type="button"  value="签到"  id="sign" class="btn btn-primary"/>
+	</form>
 	
 	<input type="button"  value="导出报表"  id="export"  class="btn btn-primary"/>
 	<input type="button" value="展示报表" data-toggle="modal" data-target="#myModal"
 	id="viewCharts" class="btn btn-warning"/><br>
 
-	<a id="report" href="">点我下载报表</a>
+	<a id="report" href="" >点我下载报表</a>
 
 
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
+	<div class="modal-dialog" style="width:850px;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">

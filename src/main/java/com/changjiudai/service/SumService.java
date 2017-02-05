@@ -100,6 +100,18 @@ public class SumService {
 		}
 	}
 	
+	/*
+	 redis store design
+	 
+	 "2017-01-12" :{
+	 	"date":2017-01-12,
+	 	"total":1233.33,
+	 	"capital":0.00,
+	 	"interest":1233.33
+	 }
+	
+	*/
+	
 	//2017-04-26	￥1233.33	￥0.00	￥1233.33
 	public ReportData prepareReport(Cagent cagent) throws IOException{
 		

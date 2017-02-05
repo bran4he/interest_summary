@@ -16,61 +16,9 @@
 	<link href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
 	<script src="//cdn.bootcss.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
 	
-	<style type="text/css">
-		.box{  
-				margin-left:auto;  
-				margin-right:auto; 
-				margin-top:100PX; 
-			}
-	</style>
+	<link rel="stylesheet" href="../static/css/main.css" type="text/css" />
 	
-	<script type="text/javascript">
-	 $(document).ready(function(){
-		 $("#getImgCode").on('click', getImgCode);
-		 $("#login").on('click', login);
-	 });
-	
-	
-	function getImgCode() {
-		
-		$.ajax({
-			type:"get",
-			dataType:"json",
-			url:"code",
-			success: function(data){
-				console.log(data);
-				$("#imgUrl").attr("src","..//"+data.imgCodePath);
-			}
-		});
-	}
-
-	function login() {
-		var username = document.getElementById("username").value;
-		var password = document.getElementById("password").value;
-		var code = document.getElementById("imgCode").value;
-		console.log(username, password, code);
-		
-		$.ajax({
-			type:"get",
-			dataType:"json",
-			url:"login?username="+username+"&password="+password+"&imgcode="+code,
-			success: function(data){
-				console.log(data);
-				if(data.logined){
-					console.info("go to charts");
-					window.location.href = "/gocharts";
-				}else{
-					alert(data.logined +": login failed!");
-				}
-			}
-		});
-	}
-	
-	window.onload = function () {
-		console.log("load...");
-	}
-	
-	</script>
+	<script type="text/javascript" src="../static/js/login.js"></script>
 
 </head>
 <body>
@@ -85,21 +33,21 @@
 			<div class="form-group">
 				<label for="username" class="col-sm-2 control-label">用户名:</label>
 				<div class="col-xs-4">
-					<input type="text" class="form-control" id="username" placeholder="请输入用户名">
+					<input type="text" class="form-control" name="username" id="username" placeholder="请输入用户名">
 				</div>
 			</div>
 			
 			<div class="form-group">
 				<label for="password" class="col-sm-2 control-label">密码:</label>
 				<div class="col-xs-4">
-					<input type="password" class="form-control" id="password" placeholder="请输入密码">
+					<input type="password" class="form-control" name="password" id="password" placeholder="请输入密码">
 				</div>
 			</div>
 			
 			<div class="form-group">
-				<label for="imgCode" class="col-sm-2 control-label">验证码:</label>
+				<label for="imgcode" class="col-sm-2 control-label">验证码:</label>
 				<div class="col-xs-4">
-					<input type="text" class="form-control" id="imgCode" placeholder="请输入验证码" />
+					<input type="text" class="form-control" name="imgcode" id="imgcode" placeholder="请输入验证码" />
 					<br>
 					<img alt="这是验证码啊！！" id="imgUrl" src=""> 
 					<input type="button" value="获取验证码" id="getImgCode" class="btn btn-info" />
