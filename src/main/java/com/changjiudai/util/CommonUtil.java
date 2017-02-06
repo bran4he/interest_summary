@@ -38,11 +38,15 @@ public class CommonUtil {
 		
 	}
 	
+	/**
+	 * D:/dev/apache-tomcat-7.0.70/wtpwebapps/web-root/
+	 * @return
+	 */
 	public static String getProjectPath() {
 		String temp = CommonUtil.class.getResource("/").getPath(); 
 		String path = temp.substring(0, temp.indexOf("WEB-INF"));
 		logger.info("path:" + path);
-		//   path:/D:/dev/apache-tomcat-7.0.70/wtpwebapps/photo-capture/
+		
 		return path;
 	}
 }

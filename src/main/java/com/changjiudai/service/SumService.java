@@ -1,6 +1,7 @@
 package com.changjiudai.service;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -168,10 +169,10 @@ public class SumService {
 	}
 	
 	public void exportReport(Cagent cagent, ReportData data){
-		cagent.setReportPath(generateExcelReport(data));
+		cagent.setReportPath(generateExcelReport(data, cagent.getUserName()));
 	}
 	
-	private String generateExcelReport(ReportData data){
+	private String generateExcelReport(ReportData data, String username){
 		
 		List<String> datelst = data.getDatelst();
 		List<Long> totallst = data.getTotallst();
@@ -204,22 +205,28 @@ public class SumService {
 		}
 		
 		String path = CommonUtil.getProjectPath();
-		String fileName = "changjiudai_" + new SimpleDateFormat("yyyy-MM-dd-hh-mm-ss").format(new Date()) + ".xlsx";
-	    FileOutputStream fileOut = null;
-		try {
-			fileOut = new FileOutputStream(path + fileName);
-			wb.write(fileOut);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally{
-			try {
-				fileOut.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+		//Changjiudai_username_20170206.xlsx
+		String fileName = Cconstant.EXPORT_NAME_PREFIX + username + new SimpleDateFormat(Cconstant.EXORT_NAME_TIMESTAMP).format(new Date()) + ".xlsx";
+	    File reportFile = new File(path + fileName);
+		if(reportFile.exists() && reportFile.length() != 0L){
+	    	logger.info("{} already exported, return directly!", fileName);
+	    }else{
+	    	FileOutputStream fileOut = null;
+	    	try {
+	    		fileOut = new FileOutputStream(reportFile);
+	    		wb.write(fileOut);
+	    	} catch (FileNotFoundException e) {
+	    		e.printStackTrace();
+	    	} catch (IOException e) {
+	    		e.printStackTrace();
+	    	} finally{
+	    		try {
+	    			fileOut.close();
+	    		} catch (IOException e) {
+	    			e.printStackTrace();
+	    		}
+	    	}
+	    }
 	    
 	    return fileName;
 	}
