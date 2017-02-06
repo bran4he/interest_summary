@@ -46,7 +46,8 @@ public class LoginService {
 
 				Header[] headers = response.getAllHeaders();
 				
-				CommonUtil.logHeaders(headers);
+				//for debug
+				//CommonUtil.logHeaders(headers);
 				
 				InputStream ins = entity.getContent();
 				

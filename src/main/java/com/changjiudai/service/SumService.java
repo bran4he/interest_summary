@@ -146,14 +146,14 @@ public class SumService {
 			doc = Jsoup.connect(url).cookies(cookies).timeout(30000).get();
 			
 			Elements tables = doc.select(".tableInfo");
-			logger.info("{}\t{}\t{}\t{}", "date", "total", "capital", "interest");
+			logger.debug("{}\t{}\t{}\t{}", "date", "total", "capital", "interest");
 			//2017-04-26	￥1233.33	￥0.00	￥1233.33
 			for(Element table : tables){
 				String date = table.select("td").get(1).attr("title"); //date 日期
 				String total = table.select("td").get(4).text();	//total 共收入
 				String capital = table.select("td").get(5).text();	//capital 本金
 				String interest = table.select("td").get(6).text();	//interest 利息
-				logger.info("{}\t{}\t{}\t{}", date, total, capital, interest);
+				logger.debug("{}\t{}\t{}\t{}", date, total, capital, interest);
 				datelst.add(date);
 				totallst.add(parseStringToDouble(total));
 				capitallst.add(parseStringToDouble(capital));

@@ -49,9 +49,10 @@
 				<div class="col-xs-4">
 					<input type="text" class="form-control" name="imgcode" id="imgcode" placeholder="请输入验证码" />
 					<br>
-					<img alt="这是验证码啊！！" id="imgUrl" src=""> 
-					<input type="button" value="获取验证码" id="getImgCode" class="btn btn-info" />
+					<img alt="这是验证码啊！！" id="imgUrl" src="">
 					<input type="button"  value="登录"  id="login" class="btn btn-primary"/>
+					<input type="button"  value="注册"  id="regist" class="btn btn-default"
+						url="http://www.changjiudai.com/?user&q=action/reginvite&u=cmVnX2ludml0ZTY5OTE=" />
 				</div>
 			</div>
 		</form>

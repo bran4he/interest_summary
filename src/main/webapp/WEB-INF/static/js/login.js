@@ -1,6 +1,13 @@
 $(document).ready(function(){
+	//get captcha when page loaded
+	getImgCode();
 	$("#getImgCode").on('click', getImgCode);
 	$("#login").on('click', login);
+	
+	//register
+	$("#regist").on('click', function(){
+		window.location.href = $("#regist").attr("url");
+	});
 });
 	
 function getImgCode() {
@@ -35,6 +42,7 @@ function login() {
 			}
 		}
 	});
+	
 }
 
 window.onload = function () {
