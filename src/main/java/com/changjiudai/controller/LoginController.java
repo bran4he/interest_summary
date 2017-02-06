@@ -49,10 +49,6 @@ public class LoginController {
 		logger.info("============username: {}", userName);
 		logger.info("============password:{}", passWord);
 		logger.info("============imgcode:{}", code);
-		if("1".equals(userName) && "1".equals(passWord)){
-			userName = "bbrraann";
-			passWord = "hcd1234";
-		}
 		
 		Cagent cagent = (Cagent) session.getAttribute("cagent");
 		cagent.setUserName(userName);
