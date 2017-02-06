@@ -43,6 +43,7 @@ import org.springframework.stereotype.Service;
 
 import com.changjiudai.bean.Cagent;
 import com.changjiudai.bean.ReportData;
+import com.changjiudai.model.ReportModel;
 import com.changjiudai.util.Cconstant;
 import com.changjiudai.util.CommonUtil;
 
@@ -150,14 +151,20 @@ public class SumService {
 			//2017-04-26	￥1233.33	￥0.00	￥1233.33
 			for(Element table : tables){
 				String date = table.select("td").get(1).attr("title"); //date 日期
-				String total = table.select("td").get(4).text();	//total 共收入
-				String capital = table.select("td").get(5).text();	//capital 本金
-				String interest = table.select("td").get(6).text();	//interest 利息
+				Long total = parseStringToLong(table.select("td").get(4).text());	//total 共收入
+				Long capital = parseStringToLong(table.select("td").get(5).text());	//capital 本金
+				Long interest = parseStringToLong(table.select("td").get(6).text());	//interest 利息
 				logger.debug("{}\t{}\t{}\t{}", date, total, capital, interest);
+				
+				//ReportModel save to Redis
+				ReportModel model = new ReportModel(date, total, capital, interest);
+				
+				
+				
 				datelst.add(date);
-				totallst.add(parseStringToDouble(total));
-				capitallst.add(parseStringToDouble(capital));
-				interestlst.add(parseStringToDouble(interest));
+				totallst.add(total);
+				capitallst.add(capital);
+				interestlst.add(interest);
 			}
 		}
 	
@@ -253,7 +260,7 @@ public class SumService {
 	}
 	
 	//￥1233.33 -> 1233.33(double)
-	private static Long parseStringToDouble(String strWithFlag){
+	private static Long parseStringToLong(String strWithFlag){
 		
 		String str = strWithFlag.substring(1);
 		
