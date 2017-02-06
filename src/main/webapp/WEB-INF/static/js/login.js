@@ -10,7 +10,7 @@ function getImgCode() {
 		url:"code",
 		success: function(data){
 			console.log(data);
-			$("#imgUrl").attr("src","..//"+data.imgCodePath);
+			$("#imgUrl").attr("src","..//"+data.captchaName);
 		}
 	});
 }

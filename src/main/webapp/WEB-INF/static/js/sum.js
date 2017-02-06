@@ -3,11 +3,10 @@ $(document).ready(function(){
 	 $("#report").css("display", "none");
 	 
 	 $("#sign").on('click', sign);
-	 $("#export").on('click', exportXlsx);
 	 $("#viewCharts").on('click', showCharts);
 	 
 	 $("#tip").on('click', function(){
-		 
+		 alert('tip');
 	 });
  });
 
@@ -19,20 +18,6 @@ function sign(){
 		success: function(data){
 			console.log(data);
 			alert(data.signedList);
-		}
-	});
-}
-
-function exportXlsx() {
-	$.ajax({
-		type:"get",
-		dataType:"json",
-		url:"export",
-		success: function(data){
-			console.log(data);
-			$("#report").attr("href","..//"+data.reportPath);
-			//show dowload link
-			$("#report").css("display", "block");
 		}
 	});
 }

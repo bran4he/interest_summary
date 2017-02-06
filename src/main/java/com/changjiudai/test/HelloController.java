@@ -45,7 +45,7 @@ public class HelloController {
 		
 		model.addAttribute("message", "skjkdfklsjbdfjweklffbl");
 		Cagent c = new Cagent();
-		c.setImgCodePath(System.currentTimeMillis() + "");
+		c.setCaptchaName(System.currentTimeMillis() + "");
 		model.put("c", c);
 		
 		return "session";

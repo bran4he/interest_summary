@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.changjiudai.bean.Cagent;
+import com.changjiudai.util.Cconstant;
 import com.changjiudai.util.CommonUtil;
 
 @Service
@@ -52,8 +53,11 @@ public class LoginService {
 				String path = CommonUtil.getProjectPath();
 				
 				BufferedInputStream bis = new BufferedInputStream(ins);
-				cagent.setImgCodePath("changjiudai_" + System.currentTimeMillis() + ".gif");
-				FileOutputStream fileOut = new FileOutputStream(path + cagent.getImgCodePath());
+				String imgName = Cconstant.EXPORT_NAME_PREFIX + System.currentTimeMillis() + ".gif";
+				logger.info("captch image name: {}", imgName);
+				cagent.setCaptchaName(imgName);
+				FileOutputStream fileOut = new FileOutputStream(path + cagent.getCaptchaName());
+				
 				byte[] buff = new byte[1024];
 				int len = -1;
 				while ((len = bis.read(buff)) != -1) {

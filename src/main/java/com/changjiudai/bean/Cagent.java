@@ -24,8 +24,8 @@ public class Cagent {
 	private boolean logined;
 	private List<String> signedList;
 	
-	private String imgCodePath;
-	private String reportPath;
+	private String captchaName;
+	private String reportName;
 	private int totalPages = 0;
 	
 	
@@ -41,17 +41,18 @@ public class Cagent {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
-	public String getImgCodePath() {
-		return imgCodePath;
+	
+	public String getCaptchaName() {
+		return captchaName;
 	}
-	public void setImgCodePath(String imgCodePath) {
-		this.imgCodePath = imgCodePath;
+	public void setCaptchaName(String captchaName) {
+		this.captchaName = captchaName;
 	}
-	public String getReportPath() {
-		return reportPath;
+	public String getReportName() {
+		return reportName;
 	}
-	public void setReportPath(String reportPath) {
-		this.reportPath = reportPath;
+	public void setReportName(String reportName) {
+		this.reportName = reportName;
 	}
 	public String getPassWord() {
 		return passWord;

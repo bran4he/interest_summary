@@ -35,12 +35,11 @@
 	 	</div>
 		<input type="button"  value="签到"  id="sign" class="btn btn-primary"/>
 	</form>
-	
-	<input type="button"  value="导出报表"  id="export"  class="btn btn-primary"/>
+	<form class="form-inline" role="form" action="download" type="get">
+		<input type="submit"  value="导出报表"  id="export"  class="btn btn-primary"/>
+	</form>
 	<input type="button" value="展示报表" data-toggle="modal" data-target="#myModal"
 	id="viewCharts" class="btn btn-warning"/><br>
-
-	<a id="report" href="" >点我下载报表</a>
 
 
 <!-- 模态框（Modal） -->

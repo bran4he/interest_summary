@@ -1,6 +1,8 @@
 package com.changjiudai.controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -8,11 +10,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -52,6 +58,31 @@ public class SumController {
 		return cagent;
 	}
 	
+	@RequestMapping(value="download", method=RequestMethod.GET)
+	public ResponseEntity<byte[]> export(HttpSession session) throws IOException {
+		logger.info("download excel report");
+		
+		Cagent cagent = (Cagent) session.getAttribute("cagent");
+		sumService.exportReport(cagent, sumService.prepareReport(cagent));
+		
+		byte[] body=null;
+		ServletContext servletContext=session.getServletContext();
+        InputStream ins = servletContext.getResourceAsStream("/WEB-INF/download/" 
+			+ cagent.getUserName() + File.separator 
+			+ cagent.getReportName());
+        
+        body=new byte[ins.available()];
+        ins.read(body);
+        
+        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        headers.add("Content-Disposition", "attachment;filename=" + cagent.getReportName() + ".xlsx");
+        HttpStatus statusCode=HttpStatus.OK;
+        ResponseEntity<byte[]> response=new ResponseEntity<byte[]>(body, headers, statusCode);
+        return response;
+		
+	}
+	/*
 	@RequestMapping(value="export", method=RequestMethod.GET)
 	public @ResponseBody Cagent export(HttpSession session) throws IOException{
 		logger.info("request export");
@@ -59,7 +90,7 @@ public class SumController {
 		sumService.exportReport(cagent, sumService.prepareReport(cagent));
 		return cagent;
 	}
-	
+	*/
 	/*
 		List<String> datelst = new ArrayList<String>();
 		List<Long> totallst = new ArrayList<Long>();

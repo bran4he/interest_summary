@@ -168,8 +168,10 @@ public class SumService {
 		return data;
 	}
 	
+	
+	
 	public void exportReport(Cagent cagent, ReportData data){
-		cagent.setReportPath(generateExcelReport(data, cagent.getUserName()));
+		cagent.setReportName(generateExcelReport(data, cagent.getUserName()));
 	}
 	
 	private String generateExcelReport(ReportData data, String username){
@@ -204,10 +206,17 @@ public class SumService {
 			cell4.setCellValue(interestlst.get(i));
 		}
 		
-		String path = CommonUtil.getProjectPath();
-		//Changjiudai_username_20170206.xlsx
-		String fileName = Cconstant.EXPORT_NAME_PREFIX + username + new SimpleDateFormat(Cconstant.EXORT_NAME_TIMESTAMP).format(new Date()) + ".xlsx";
-	    File reportFile = new File(path + fileName);
+		String path = CommonUtil.getWEBINFPath();
+		//20170206_Changjiudai_username.xlsx
+		String fileName = new SimpleDateFormat(Cconstant.EXORT_NAME_TIMESTAMP).format(new Date()) + Cconstant.EXPORT_NAME_PREFIX + username  + ".xlsx";
+	    
+		String folder = path + username;
+		if(!new File(folder).exists()){
+			new File(folder).mkdir();
+		}
+		
+		//path/username/file
+		File reportFile = new File(folder + File.separator +fileName);
 		if(reportFile.exists() && reportFile.length() != 0L){
 	    	logger.info("{} already exported, return directly!", fileName);
 	    }else{

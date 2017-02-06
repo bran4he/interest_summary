@@ -4,13 +4,14 @@ import org.apache.http.Header;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//import com.changjiudai.trans.LoginAction;
-//import com.changjiudai.trans.TransUtil;
 
 public class CommonUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 	
+	public static void main(String[] args) {
+		CommonUtil.getProjectPath();
+	}
 	
 	public static void logHeaders(Header[] headers) {
 		logger.info("----response headers----");
@@ -43,10 +44,23 @@ public class CommonUtil {
 	 * @return
 	 */
 	public static String getProjectPath() {
-		String temp = CommonUtil.class.getResource("/").getPath(); 
+		String temp = CommonUtil.class.getResource("/").getPath();
+		logger.info("getResources path:{}", temp);
 		String path = temp.substring(0, temp.indexOf("WEB-INF"));
-		logger.info("path:" + path);
-		
+		logger.info("project path:{}", path);
 		return path;
 	}
+	
+	/**
+	 * D:/dev/apache-tomcat-7.0.70/wtpwebapps/web-root/WEB-INF/
+	 * @return
+	 */
+	public static String getWEBINFPath(){
+		///D:/dev/apache-tomcat-7.0.70/wtpwebapps/interest-summary/WEB-INF/classes/
+		String temp = CommonUtil.class.getResource("/").getPath();
+		String path = temp.substring(0, temp.indexOf("classes"));
+		logger.info("WEB-INF path:{}", path);
+		return path;
+	}
+	
 }
