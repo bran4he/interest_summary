@@ -5,6 +5,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.Proxy.Type;
+import java.net.SocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DecimalFormat;
@@ -20,10 +24,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.conn.HttpInetSocketAddress;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -39,6 +45,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.changjiudai.bean.Cagent;
@@ -46,18 +53,29 @@ import com.changjiudai.bean.ReportData;
 import com.changjiudai.model.ReportModel;
 import com.changjiudai.util.Cconstant;
 import com.changjiudai.util.CommonUtil;
+import com.changjiudai.util.ConfigUtil;
 
 @Service
 public class SumService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SumService.class);
 	
+	@Autowired
+	private ConfigUtil config;
+	
 	public void sign(Cagent cagent){
 		
 		if(cagent.isLogined()){
 			logger.info("==============sign daily");
 			
-			CloseableHttpClient httpclient = HttpClients.custom().setDefaultCookieStore(cagent.getCookieStore()).build();
+			CloseableHttpClient httpclient = null;
+			
+			if(config.isEnableProxy()){
+				httpclient = HttpClients.custom().setDefaultCookieStore(cagent.getCookieStore()).setProxy(config.getHttpHost()).build();
+			}else{
+				httpclient = HttpClients.custom().setDefaultCookieStore(cagent.getCookieStore()).build();
+			}
+			
 			
 			HttpUriRequest sign;
 			CloseableHttpResponse response = null;
@@ -133,7 +151,13 @@ public class SumService {
 		Document doc = null;
 		
 		if(cagent.getTotalPages() == 0){
-			doc = Jsoup.connect(Cconstant.PAGE_NUM_URL).cookies(cookies).timeout(30000).get();
+			
+			if(config.isEnableProxy()){
+				doc = Jsoup.connect(Cconstant.PAGE_NUM_URL).cookies(cookies).timeout(30000).proxy(config.getProxy()).get();
+			}else{
+				doc = Jsoup.connect(Cconstant.PAGE_NUM_URL).cookies(cookies).timeout(30000).get();
+			}
+			
 			Elements pages = doc.select("div .userPage");
 			String pageStr = pages.get(0).text();	//共12页/当前为第1页 首页 上一页 下一页 尾页
 			int totalPages = Integer.parseInt(getPageNum(pageStr));
