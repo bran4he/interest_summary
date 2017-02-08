@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
-import org.apache.http.HttpHost;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -23,34 +22,21 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.changjiudai.bean.Cagent;
 import com.changjiudai.util.Cconstant;
 import com.changjiudai.util.CommonUtil;
-import com.changjiudai.util.ConfigUtil;
 
 @Service
 public class LoginService {
 
 	private static final Logger logger = LoggerFactory.getLogger(LoginService.class);
 	
-	@Autowired
-	private ConfigUtil config;
-	
 	public void setImagePath(Cagent cagent){
 		BasicCookieStore cookieStore = new BasicCookieStore();
 		cagent.setCookieStore(cookieStore);
-		
-		CloseableHttpClient httpclient = null;
-		
-		if(config.isEnableProxy() && config.isProxyAuth()){
-			httpclient = HttpClients.custom().setDefaultCookieStore(cookieStore).setDefaultCredentialsProvider(config.getCredentialsProvider()).build();
-		}else{
-			httpclient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
-		}
-		
+		CloseableHttpClient httpclient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
 		try {
 			logger.info("==============get img code start");
 			HttpGet httpget = new HttpGet("http://www.changjiudai.com//plugins/index.php?q=imgcode&height=25");
@@ -115,14 +101,8 @@ public class LoginService {
 	public void login(Cagent cagent){
 
 		logger.info("==============login start");
-		CloseableHttpClient httpclient = null;
 		
-		if(config.isEnableProxy() && config.isProxyAuth()){
-			httpclient = HttpClients.custom().setDefaultCookieStore(cagent.getCookieStore()).setDefaultCredentialsProvider(config.getCredentialsProvider()).build();
-		}else{
-			httpclient = HttpClients.custom().setDefaultCookieStore(cagent.getCookieStore()).build();
-		}
-		
+		CloseableHttpClient httpclient = HttpClients.custom().setDefaultCookieStore(cagent.getCookieStore()).build();
 		CloseableHttpResponse response = null;
 		try {
 			HttpUriRequest login = RequestBuilder.post()
