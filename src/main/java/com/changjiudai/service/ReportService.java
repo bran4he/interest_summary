@@ -6,11 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import com.changjiudai.dao.ReportDao;
 import com.changjiudai.model.ReportModel;
 
-import junit.framework.Assert;
 
 @Service
 public class ReportService {
@@ -80,7 +80,8 @@ public class ReportService {
 	
 	private ReportModel addTwoModels(ReportModel m1, ReportModel m2){
 		ReportModel m = new ReportModel();
-		Assert.assertEquals(m1.getDate(), m2.getDate());
+//		Assert.assertEquals(m1.getDate(), m2.getDate());
+		Assert.isTrue(m1.getDate().equals(m2.getDate()));
 		m.setDate(m1.getDate());
 		m.setTotal(m1.getTotal() + m2.getTotal());
 		m.setCapital(m1.getCapital() + m2.getCapital());
