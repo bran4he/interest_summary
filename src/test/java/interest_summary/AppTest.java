@@ -18,10 +18,10 @@ public class AppTest {
 //		getNumTest2("￥1.01");
 //		getNumTest2("￥0.00");
 //		getNumTest2("￥2.00");
-//		sortListTest();
+		sortListTest();
 //		getPageNumTest();
 
-		stringTest();
+//		stringTest();
 	}
 	
 	public static void stringTest(){

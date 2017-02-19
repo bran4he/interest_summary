@@ -5,6 +5,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.Proxy.Type;
+import java.net.SocketAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.DecimalFormat;
@@ -12,6 +16,7 @@ import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -20,10 +25,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpHost;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.conn.HttpInetSocketAddress;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -39,6 +46,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.changjiudai.bean.Cagent;
@@ -52,12 +60,17 @@ public class SumService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SumService.class);
 	
+	@Autowired
+	private ReportService reportService;
+	
+	
 	public void sign(Cagent cagent){
 		
 		if(cagent.isLogined()){
 			logger.info("==============sign daily");
 			
 			CloseableHttpClient httpclient = HttpClients.custom().setDefaultCookieStore(cagent.getCookieStore()).build();
+			
 			
 			HttpUriRequest sign;
 			CloseableHttpResponse response = null;
@@ -114,13 +127,17 @@ public class SumService {
 	
 	*/
 	
-	//2017-04-26	￥1233.33	￥0.00	￥1233.33
-	public ReportData prepareReport(Cagent cagent) throws IOException{
+	
+	/*
+	 * get data from page(online)
+	 */
+	public ReportData parsePage(Cagent cagent) throws IOException{
 		
 		List<String> datelst = new ArrayList<String>();
 		List<Long> totallst = new ArrayList<Long>();
 		List<Long> capitallst = new ArrayList<Long>();
 		List<Long> interestlst = new ArrayList<Long>();
+		
 		Map<String, String> cookies = new HashMap<String, String>();
 		
 		List<Cookie> cookielst = cagent.getCookieStore().getCookies();
@@ -133,7 +150,9 @@ public class SumService {
 		Document doc = null;
 		
 		if(cagent.getTotalPages() == 0){
+			
 			doc = Jsoup.connect(Cconstant.PAGE_NUM_URL).cookies(cookies).timeout(30000).get();
+			
 			Elements pages = doc.select("div .userPage");
 			String pageStr = pages.get(0).text();	//共12页/当前为第1页 首页 上一页 下一页 尾页
 			int totalPages = Integer.parseInt(getPageNum(pageStr));
@@ -147,19 +166,15 @@ public class SumService {
 			doc = Jsoup.connect(url).cookies(cookies).timeout(30000).get();
 			
 			Elements tables = doc.select(".tableInfo");
-			logger.debug("{}\t{}\t{}\t{}", "date", "total", "capital", "interest");
+			
+			logger.info("{}\t\t\t\t{}\t{}\t{}", "date", "total", "capital", "interest");
 			//2017-04-26	￥1233.33	￥0.00	￥1233.33
 			for(Element table : tables){
-				String date = table.select("td").get(1).attr("title"); //date 日期
-				Long total = parseStringToLong(table.select("td").get(4).text());	//total 共收入
-				Long capital = parseStringToLong(table.select("td").get(5).text());	//capital 本金
-				Long interest = parseStringToLong(table.select("td").get(6).text());	//interest 利息
-				logger.debug("{}\t{}\t{}\t{}", date, total, capital, interest);
-				
-				//ReportModel save to Redis
-				ReportModel model = new ReportModel(date, total, capital, interest);
-				
-				
+				String date = table.select("td").get(1).attr("title").trim(); //date 日期
+				Long total = parseStringToLong(table.select("td").get(4).text().trim());	//total 共收入
+				Long capital = parseStringToLong(table.select("td").get(5).text().trim());	//capital 本金
+				Long interest = parseStringToLong(table.select("td").get(6).text().trim());	//interest 利息
+				logger.info("{}\t\t\t\t{}\t{}\t{}", date, total, capital, interest);
 				
 				datelst.add(date);
 				totallst.add(total);
@@ -167,14 +182,104 @@ public class SumService {
 				interestlst.add(interest);
 			}
 		}
-	
+		
 		ReportData data = new ReportData(datelst,
-										totallst, 
-										capitallst, 
-										interestlst);
+				totallst, 
+				capitallst, 
+				interestlst);
+		
+		return data;
+	
+	}
+	
+	
+	
+	//2017-04-26	￥1233.33	￥0.00	￥1233.33
+	public ReportData prepareReport(Cagent cagent) throws IOException{
+		
+		ReportData data = new ReportData();
+		
+		String currentDate = reportService.getCurrentDate();
+		logger.info("get currentDate from redis : {}", currentDate);
+		
+		String currentDateSys = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+		logger.info("get currentDate from system : {}", currentDateSys);
+		
+		//currentDate is null, or is not equals date of today, update all data from page
+		if(null == currentDate || 
+				!currentDate.equals(currentDateSys)){
+			logger.info("go to get data from page and sync redis process");
+			data = parsePage(cagent);
+			syncCurrentDate(data);
+			syncReportModel(data);
+		}
+		logger.info("go to get data from redis process");
+		//get data from redis directly
+		data = getDataFromRedis();
+		
+		return data;
+	}
+	/*
+	 * get data from redis directly
+	 */
+	private ReportData getDataFromRedis(){
+		
+		List<String> dates = reportService.getAllDates();
+		logger.info("date list before sort: {}", dates);
+		Collections.sort(dates);
+		logger.info("date list after sort: {}", dates);
+		
+		
+		List<String> datelst = new ArrayList<String>();
+		List<Long> totallst = new ArrayList<Long>();
+		List<Long> capitallst = new ArrayList<Long>();
+		List<Long> interestlst = new ArrayList<Long>();
+		
+		for(String key : dates){
+			ReportModel m = reportService.getReportModel(key);
+			datelst.add(m.getDate());
+			totallst.add(m.getTotal());
+			capitallst.add(m.getCapital());
+			interestlst.add(m.getInterest());
+		}
+		
+		ReportData data = new ReportData(datelst,
+				totallst, 
+				capitallst, 
+				interestlst);
+		
 		return data;
 	}
 	
+	
+	private void syncCurrentDate(ReportData data){
+		logger.info("syncCurrentDate :{}", data.getDatelst().get(0));
+		reportService.updateCurrentDate(data.getDatelst().get(0));
+	}
+	
+	/*
+	 * sync data with redis server
+	 */
+	private void syncReportModel(ReportData data){
+		//clear all data bound by session user
+		reportService.clean();
+		
+		List<String> datelst = data.getDatelst();
+		List<Long> totallst = data.getTotallst();
+		List<Long> capitallst = data.getCapitallst();
+		List<Long> interestlst = data.getInterestlst();
+		
+		for(int i = 0; i<datelst.size(); i++){
+			ReportModel model = new ReportModel(
+					datelst.get(i),
+					totallst.get(i), 
+					capitallst.get(i), 
+					interestlst.get(i));
+			//*1. not in redis need add
+			//*2. in redis but need update
+			reportService.addOrUpdate(model);
+		}
+	}
 	
 	
 	public void exportReport(Cagent cagent, ReportData data){
@@ -217,12 +322,12 @@ public class SumService {
 		//20170206_Changjiudai_username.xlsx
 		String fileName = new SimpleDateFormat(Cconstant.EXORT_NAME_TIMESTAMP).format(new Date()) + Cconstant.EXPORT_NAME_PREFIX + username  + ".xlsx";
 	    
-		String folder = path + username;
+		String folder = path + "download/" + username;
 		if(!new File(folder).exists()){
 			new File(folder).mkdir();
 		}
 		
-		//path/username/file
+		//path/download/username/file
 		File reportFile = new File(folder + File.separator +fileName);
 		if(reportFile.exists() && reportFile.length() != 0L){
 	    	logger.info("{} already exported, return directly!", fileName);
@@ -298,4 +403,14 @@ public class SumService {
 			return "0";
 		}
 	}
+
+	public ReportService getReportService() {
+		return reportService;
+	}
+
+	public void setReportService(ReportService reportService) {
+		this.reportService = reportService;
+	}
+	
+	
 }

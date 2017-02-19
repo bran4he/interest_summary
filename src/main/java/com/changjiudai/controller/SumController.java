@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.changjiudai.bean.Cagent;
 import com.changjiudai.bean.ReportData;
+import com.changjiudai.model.ReportModel;
+import com.changjiudai.service.ReportService;
 import com.changjiudai.service.SumService;
 
 @Controller
@@ -37,6 +39,9 @@ public class SumController {
 	@Autowired
 	private SumService sumService;
 
+	@Autowired
+	private ReportService reportService;
+	
 	@RequestMapping(value="index", method=RequestMethod.GET)
 	public String chartsPage(HttpSession session){
 		Cagent cagent = (Cagent) session.getAttribute("cagent");
@@ -67,9 +72,10 @@ public class SumController {
 		
 		byte[] body=null;
 		ServletContext servletContext=session.getServletContext();
-        InputStream ins = servletContext.getResourceAsStream("/WEB-INF/download/" 
+        InputStream ins = servletContext.getResourceAsStream("../WEB-INF/download/" 
 			+ cagent.getUserName() + File.separator 
 			+ cagent.getReportName());
+        
         
         body=new byte[ins.available()];
         ins.read(body);
@@ -100,58 +106,33 @@ public class SumController {
 	
 	@RequestMapping(value="chart", method=RequestMethod.GET)
 	public @ResponseBody ReportData exportChartData(HttpSession session) throws IOException{
-		logger.info("request login");
+		logger.info("request show chart");
 		Cagent cagent = (Cagent) session.getAttribute("cagent");
 		
 		ReportData reportData = sumService.prepareReport(cagent);
-		
-		List<String> datelst = reportData.getDatelst();
-		List<Long> totallst = reportData.getTotallst();
-		List<Long> capitallst = reportData.getCapitallst();
-		List<Long> interestlst = reportData.getInterestlst();
-		
-		Map<String, Long> totalMap = new HashMap<String, Long>();
-		Map<String, Long> capotalMap = new HashMap<String, Long>();
-		Map<String, Long> interestMap = new HashMap<String, Long>();
-		
-		for(int i=0; i<datelst.size(); i++){
-			String date = datelst.get(i);
-			if(!totalMap.containsKey(date)){
-				totalMap.put(date, totallst.get(i));
-				capotalMap.put(date, capitallst.get(i));
-				interestMap.put(date, interestlst.get(i));
-			}else{
-				totalMap.put(date, totalMap.get(date) + totallst.get(i));
-				capotalMap.put(date, capotalMap.get(date) + capitallst.get(i));
-				interestMap.put(date, interestMap.get(date) + interestlst.get(i));
-			}
+
+		//test
+		logger.info("test with total list : ======================");
+		List<ReportModel> datalst = reportService.getAllModels();
+		for(ReportModel data : datalst){
+			logger.info(data.getDate() + "\t" + data.getTotal());
 		}
-		Set<String> set = totalMap.keySet();
-		List<String> dateList = new ArrayList<String>();
-		dateList.addAll(set);
-		
-		Collections.sort(dateList);
-		
-		List<String> dates = new ArrayList<String>();
-		List<Long> totals = new ArrayList<Long>();
-		List<Long> capitals = new ArrayList<Long>();
-		List<Long> interests = new ArrayList<Long>();
-		for(String date: dateList){
-			dates.add(date);
-			totals.add(totalMap.get(date));
-			capitals.add(capotalMap.get(date));
-			interests.add(interestMap.get(date));
-		}
-		
-		ReportData chartData = new ReportData(dates, totals, capitals, interests);
-		
-		return chartData;
+		logger.info("====================== end");
+		return reportData;
 	}
 	
 	
 	
 	
 	
+	public ReportService getReportService() {
+		return reportService;
+	}
+
+	public void setReportService(ReportService reportService) {
+		this.reportService = reportService;
+	}
+
 	public SumService getSumService() {
 		return sumService;
 	}

@@ -6,6 +6,7 @@ public class ReportModel implements Serializable{
 
 	private static final long serialVersionUID = 2420573502553342851L;
 	
+	
 	private String date;
 	private Long total;
 	private Long capital;
@@ -45,6 +46,48 @@ public class ReportModel implements Serializable{
 	}
 	public void setInterest(Long interest) {
 		this.interest = interest;
+	}
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((capital == null) ? 0 : capital.hashCode());
+		result = prime * result + ((date == null) ? 0 : date.hashCode());
+		result = prime * result + ((interest == null) ? 0 : interest.hashCode());
+		result = prime * result + ((total == null) ? 0 : total.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ReportModel other = (ReportModel) obj;
+		if (capital == null) {
+			if (other.capital != null)
+				return false;
+		} else if (!capital.equals(other.capital))
+			return false;
+		if (date == null) {
+			if (other.date != null)
+				return false;
+		} else if (!date.equals(other.date))
+			return false;
+		if (interest == null) {
+			if (other.interest != null)
+				return false;
+		} else if (!interest.equals(other.interest))
+			return false;
+		if (total == null) {
+			if (other.total != null)
+				return false;
+		} else if (!total.equals(other.total))
+			return false;
+		return true;
 	}
 	
 	

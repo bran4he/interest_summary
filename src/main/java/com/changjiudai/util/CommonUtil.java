@@ -4,14 +4,24 @@ import org.apache.http.Header;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.changjiudai.bean.Cagent;
+
 
 public class CommonUtil {
 
 	private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 	
+	private static final String SESSION_STORE_KEY = "cagent";
+	
 	public static void main(String[] args) {
 		CommonUtil.getProjectPath();
 	}
+	
+	public static String getUserName(){
+		Cagent cagent = (Cagent) WebContextHolder.getSession().getAttribute(SESSION_STORE_KEY);
+		return cagent.getUserName();
+	}
+	
 	
 	public static void logHeaders(Header[] headers) {
 		logger.info("----response headers----");
