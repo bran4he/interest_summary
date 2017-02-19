@@ -143,7 +143,7 @@ public class SumService {
 		List<Cookie> cookielst = cagent.getCookieStore().getCookies();
 		
 		for (int i = 0; i < cookielst.size(); i++) {
-			logger.info("-{}\t{}", cookielst.get(i).getName(), cookielst.get(i).getValue());	//cookies.get(i).toString()
+//			logger.info("-{}\t{}", cookielst.get(i).getName(), cookielst.get(i).getValue());	//cookies.get(i).toString()
 			cookies.put(cookielst.get(i).getName(), cookielst.get(i).getValue());
 		}
 		
@@ -174,7 +174,7 @@ public class SumService {
 				Long total = parseStringToLong(table.select("td").get(4).text().trim());	//total 共收入
 				Long capital = parseStringToLong(table.select("td").get(5).text().trim());	//capital 本金
 				Long interest = parseStringToLong(table.select("td").get(6).text().trim());	//interest 利息
-				logger.info("{}\t\t\t\t{}\t{}\t{}", date, total, capital, interest);
+//				logger.info("{}\t\t\t\t{}\t{}\t{}", date, total, capital, interest);
 				
 				datelst.add(date);
 				totallst.add(total);
@@ -322,13 +322,16 @@ public class SumService {
 		//20170206_Changjiudai_username.xlsx
 		String fileName = new SimpleDateFormat(Cconstant.EXORT_NAME_TIMESTAMP).format(new Date()) + Cconstant.EXPORT_NAME_PREFIX + username  + ".xlsx";
 	    
-		String folder = path + "download/" + username;
+		String folder = path + "download" + File.separator + username;
 		if(!new File(folder).exists()){
 			new File(folder).mkdir();
 		}
 		
 		//path/download/username/file
 		File reportFile = new File(folder + File.separator +fileName);
+		
+		logger.info("prepare xlsx file path:{}", reportFile.getAbsoluteFile());
+		
 		if(reportFile.exists() && reportFile.length() != 0L){
 	    	logger.info("{} already exported, return directly!", fileName);
 	    }else{

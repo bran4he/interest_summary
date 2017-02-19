@@ -72,9 +72,15 @@ public class SumController {
 		
 		byte[] body=null;
 		ServletContext servletContext=session.getServletContext();
-        InputStream ins = servletContext.getResourceAsStream("../WEB-INF/download/" 
-			+ cagent.getUserName() + File.separator 
-			+ cagent.getReportName());
+		
+		String path = File.separator + "WEB-INF" 
+					+ File.separator + "download" 
+					+ File.separator + cagent.getUserName() 
+					+ File.separator + cagent.getReportName();
+		
+		logger.info("request download xlsx file path :{}", path);
+		
+        InputStream ins = servletContext.getResourceAsStream(path);
         
         
         body=new byte[ins.available()];
