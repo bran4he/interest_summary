@@ -1,5 +1,11 @@
 package com.changjiudai.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -13,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.changjiudai.bean.Cagent;
 import com.changjiudai.service.LoginService;
+import com.changjiudai.service.SumService;
 
 @Controller
 @RequestMapping("/login")
@@ -22,6 +29,9 @@ public class LoginController {
 	
 	@Autowired
 	private LoginService loginService;
+	
+	@Autowired
+	private SumService sumService;
 	
 	@RequestMapping(value="index", method=RequestMethod.GET)
 	public String chartsPage(){
@@ -56,6 +66,10 @@ public class LoginController {
 		cagent.setCode(code);
 		
 		loginService.login(cagent);
+		
+		ScheduledExecutorService service = Executors.newSingleThreadScheduledExecutor(); 
+		service.scheduleAtFixedRate(new BackRun(sumService, cagent), 1, 5, TimeUnit.MINUTES);
+		
 		return cagent;
 		
 	}
